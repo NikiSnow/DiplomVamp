@@ -8,4 +8,10 @@ public class XPBlob : MonoBehaviour
     {
 
     }
+
+    public int takeXP()
+    {
+        Destroy(this.gameObject);
+        return XPAmount;
+    }
 }

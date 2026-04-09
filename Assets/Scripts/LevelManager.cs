@@ -2,15 +2,11 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] int LevelNeed;
+    [SerializeField] int CurrXPAmout;
 
-    // Update is called once per frame
-    void Update()
+    public void takeXP(int NewXP)
     {
-        
+        CurrXPAmout = CurrXPAmout + NewXP;
     }
 }

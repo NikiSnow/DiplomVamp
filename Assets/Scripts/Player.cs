@@ -12,7 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField] float MaxHp;
     [SerializeField] float CurrHp;
 
-    [SerializeField] Collider2D MainCollider;
+    [SerializeField] LevelManager LevelMan;
+
 
     float hor = 0;
     float ver = 0;
@@ -58,7 +59,7 @@ public class Player : MonoBehaviour
         XPBlob xp = collision.gameObject.GetComponent<XPBlob>();
         if (xp != null)
         {
-            //xp.takeXP();
+            LevelMan.takeXP(xp.takeXP());
         }
     }
 
