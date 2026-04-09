@@ -1,35 +1,113 @@
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] Rigidbody2D Rb;
-    [SerializeField] SpriteRenderer PlayerSprite;
+    [Header("Links")]
+    [SerializeField] private Rigidbody2D Rb;
+    [SerializeField] private SpriteRenderer PlayerSprite;
+    [SerializeField] private Collider2D MainCollider;
+    [SerializeField] private PlayerWaterEffect WaterEffect;
 
-    [SerializeField] float Speed;
+    [Header("Movement")]
+    [SerializeField] private float Speed = 5f;
+    [SerializeField] private float GroundAcceleration = 22f;
+    [SerializeField] private float GroundDeceleration = 28f;
 
-    [SerializeField] float MaxHp;
-    [SerializeField] float CurrHp;
+    [Header("Health")]
+    [SerializeField] private float MaxHp = 100f;
+    [SerializeField] private float CurrHp = 100f;
 
     [SerializeField] LevelManager LevelMan;
 
+    private float hor = 0f;
+    private float ver = 0f;
 
-    float hor = 0;
-    float ver = 0;
+    private Vector2 input;
+    private Vector2 targetVelocity;
+
+    public Vector2 InputVector => input;
+    public bool HasMovementInput => input.sqrMagnitude > 0.0001f;
+    public Rigidbody2D PlayerRb => Rb;
+    public float BaseSpeed => Speed;
+
+    private void Reset()
+    {
+        Rb = GetComponent<Rigidbody2D>();
+        MainCollider = GetComponent<Collider2D>();
+        PlayerSprite = GetComponentInChildren<SpriteRenderer>();
+        WaterEffect = GetComponent<PlayerWaterEffect>();
+    }
+
+    private void Awake()
+    {
+        if (Rb == null)
+        {
+            Rb = GetComponent<Rigidbody2D>();
+        }
+
+        if (WaterEffect == null)
+        {
+            WaterEffect = GetComponent<PlayerWaterEffect>();
+        }
+
+        CurrHp = Mathf.Clamp(CurrHp, 0f, MaxHp);
+    }
 
     private void Update()
+    {
+        ReadInput();
+        UpdateFlip();
+    }
+
+    private void FixedUpdate()
     {
         Move();
     }
 
-    void Move()
+    private void ReadInput()
     {
-        hor = Input.GetAxis("Horizontal");
-        ver = Input.GetAxis("Vertical");
-        if (hor != 0 || ver != 0)
+        hor = Input.GetAxisRaw("Horizontal");
+        ver = Input.GetAxisRaw("Vertical");
+
+        input = new Vector2(hor, ver);
+
+        if (input.sqrMagnitude > 1f)
         {
-            Rb.linearVelocity = new Vector2(Speed * hor, Speed * ver);
+            input.Normalize();
+        }
+    }
+
+    private void Move()
+    {
+        float speedMultiplier = 1f;
+        float acceleration = GroundAcceleration;
+        float deceleration = GroundDeceleration;
+
+        if (WaterEffect != null)
+        {
+            speedMultiplier = WaterEffect.GetCurrentMoveMultiplier();
+            acceleration = WaterEffect.GetCurrentAcceleration(GroundAcceleration);
+            deceleration = WaterEffect.GetCurrentDeceleration(GroundDeceleration);
+        }
+
+        float finalSpeed = Speed * speedMultiplier;
+        targetVelocity = input * finalSpeed;
+
+        float moveRate = HasMovementInput ? acceleration : deceleration;
+
+        Rb.linearVelocity = Vector2.MoveTowards(
+            Rb.linearVelocity,
+            targetVelocity,
+            moveRate * Time.fixedDeltaTime
+        );
+    }
+
+    private void UpdateFlip()
+    {
+        if (PlayerSprite == null)
+        {
+            return;
         }
 
         if (hor > 0)
@@ -44,15 +122,12 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("1");
         Enemy enemy = collision.gameObject.GetComponent<Enemy>();
 
-        // Проверяем, что враг существует И что коллайдер является основным && collision.collider == MainCollider
         if (enemy != null)
         {
-            Debug.Log("2");
-            float Dmg = enemy.GiveDmg();
-            CurrHp = CurrHp - Dmg;
+            float dmg = enemy.GiveDmg();
+            CurrHp -= dmg;
             HealthCheck();
         }
 
@@ -63,11 +138,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    void HealthCheck()
+    private void HealthCheck()
     {
-        if (CurrHp < 0)
+        if (CurrHp <= 0)
         {
-            SceneManager.LoadScene(this.gameObject.scene.name);
+            SceneManager.LoadScene(gameObject.scene.name);
         }
     }
 }
