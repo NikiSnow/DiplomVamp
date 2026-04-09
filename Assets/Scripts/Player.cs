@@ -1,7 +1,6 @@
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -13,9 +12,11 @@ public class Player : MonoBehaviour
     [SerializeField] float MaxHp;
     [SerializeField] float CurrHp;
 
+    [SerializeField] Collider2D MainCollider;
 
     float hor = 0;
     float ver = 0;
+
     private void Update()
     {
         Move();
@@ -40,13 +41,24 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.GetComponent<Enemy>())
+        Debug.Log("1");
+        Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+
+        // Проверяем, что враг существует И что коллайдер является основным && collision.collider == MainCollider
+        if (enemy != null)
         {
-            float Dmg = collision.GetComponent<Enemy>().GiveDmg();
+            Debug.Log("2");
+            float Dmg = enemy.GiveDmg();
             CurrHp = CurrHp - Dmg;
             HealthCheck();
+        }
+
+        XPBlob xp = collision.gameObject.GetComponent<XPBlob>();
+        if (xp != null)
+        {
+            //xp.takeXP();
         }
     }
 
@@ -56,8 +68,5 @@ public class Player : MonoBehaviour
         {
             SceneManager.LoadScene(this.gameObject.scene.name);
         }
-
-
     }
-
 }
