@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     [Header("Links")]
     [SerializeField] private Rigidbody2D Rb;
     [SerializeField] private SpriteRenderer PlayerSprite;
-    [SerializeField] private Collider2D MainCollider;
     [SerializeField] private PlayerWaterEffect WaterEffect;
 
     [Header("Movement")]
@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float CurrHp = 100f;
 
     [SerializeField] LevelManager LevelMan;
+
+    [SerializeField] Image HealthVisual;
 
     private float hor = 0f;
     private float ver = 0f;
@@ -33,24 +35,11 @@ public class Player : MonoBehaviour
 
     private void Reset()
     {
-        Rb = GetComponent<Rigidbody2D>();
-        MainCollider = GetComponent<Collider2D>();
-        PlayerSprite = GetComponentInChildren<SpriteRenderer>();
-        WaterEffect = GetComponent<PlayerWaterEffect>();
+
     }
 
     private void Awake()
     {
-        if (Rb == null)
-        {
-            Rb = GetComponent<Rigidbody2D>();
-        }
-
-        if (WaterEffect == null)
-        {
-            WaterEffect = GetComponent<PlayerWaterEffect>();
-        }
-
         CurrHp = Mathf.Clamp(CurrHp, 0f, MaxHp);
     }
 
@@ -122,6 +111,15 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
+
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
         Enemy enemy = collision.gameObject.GetComponent<Enemy>();
 
         if (enemy != null)
@@ -129,20 +127,23 @@ public class Player : MonoBehaviour
             float dmg = enemy.GiveDmg();
             CurrHp -= dmg;
             HealthCheck();
-        }
-
-        XPBlob xp = collision.gameObject.GetComponent<XPBlob>();
-        if (xp != null)
-        {
-            LevelMan.takeXP(xp.takeXP());
+            //Debug.Log("Enemy");
+            return;
         }
     }
 
     private void HealthCheck()
     {
+
+        HealthVisual.fillAmount = CurrHp / MaxHp;
         if (CurrHp <= 0)
         {
             SceneManager.LoadScene(gameObject.scene.name);
         }
+    }
+
+    public void ApplyXP(int NewXP)
+    {
+        LevelMan.takeXP(NewXP);
     }
 }
