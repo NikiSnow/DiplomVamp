@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float Heath = 25;
     [SerializeField] float Dmg = 1;
 
-    [SerializeField] Transform target;
+    [SerializeField] public Transform target;
     [SerializeField] SpriteRenderer Sprite;
     [SerializeField] Rigidbody2D rb;
 
