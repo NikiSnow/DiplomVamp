@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 294960196}
   - component: {fileID: 294960195}
   - component: {fileID: 294960194}
+  - component: {fileID: 294960199}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -153,10 +154,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Rb: {fileID: 294960195}
   PlayerSprite: {fileID: 1178829077}
+  MainCollider: {fileID: 294960196}
+  WaterEffect: {fileID: 294960199}
   Speed: 3
+  GroundAcceleration: 22
+  GroundDeceleration: 28
   MaxHp: 100
   CurrHp: 100
-  MainCollider: {fileID: 294960196}
 --- !u!50 &294960195
 Rigidbody2D:
   serializedVersion: 5
@@ -172,7 +176,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -301,6 +305,29 @@ Transform:
   - {fileID: 1178829076}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &294960199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 294960193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2c478bdc5c3a3f41a534af6c37cd3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 294960194}
+  WaterMoveMultiplier: 0.8
+  WaterAcceleration: 10
+  WaterDeceleration: 4
+  WaterFillTime: 5
+  MaxWaterStartPenalty: 0.6
+  WaterFillSpeedMultiplier: 1
+  WaterDrainSpeedMultiplier: 1.2
+  StillVelocityThreshold: 0.08
+  EnableDebugLogs: 1
+  DebugLogInterval: 0.35
 --- !u!1 &397989388
 GameObject:
   m_ObjectHideFlags: 0
@@ -506641,9 +506668,10 @@ GameObject:
   - component: {fileID: 971963807}
   - component: {fileID: 971963809}
   - component: {fileID: 971963808}
+  - component: {fileID: 971963810}
   m_Layer: 0
   m_Name: WaterLayer
-  m_TagString: Untagged
+  m_TagString: Water
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -506706,7 +506734,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -20
+  m_SortingOrder: -21
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0.39499998, y: 0.11500001, z: 0}
   m_MaxChunkCount: 16
@@ -515608,7 +515636,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 6
-      m_TileSpriteIndex: 6
+      m_TileSpriteIndex: 9
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -519509,14 +519537,14 @@ Tilemap:
     m_Data: {fileID: 237165369, guid: 8a1e8606efdc248488ade02f061e3ab3, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: 2048371260, guid: 8a1e8606efdc248488ade02f061e3ab3, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 958564623, guid: 8a1e8606efdc248488ade02f061e3ab3, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
   m_TileMatrixArray:
   - m_RefCount: 1275
     m_Data:
@@ -519563,6 +519591,44 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!19719996 &971963810
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971963806}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0
 --- !u!1 &1123406589
 GameObject:
   m_ObjectHideFlags: 0
