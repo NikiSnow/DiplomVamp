@@ -1,16 +1,42 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] float LevelNeed;
+    [SerializeField] float CurrXPAmout;
+
+    [SerializeField] Image XPBar;
+
+    [SerializeField] GameObject Panel;
+
+
+    private void Start()
     {
-        
+        SetVisual();
+    }
+    public void takeXP(int NewXP)
+    {
+        CurrXPAmout = CurrXPAmout + NewXP;
+
+        SetVisual();
     }
 
-    // Update is called once per frame
-    void Update()
+    void SetVisual()
     {
-        
+        //Debug.Log(CurrXPAmout / LevelNeed);
+        if (CurrXPAmout > LevelNeed)
+        {
+            CurrXPAmout = 0;
+            Panel.SetActive(true);
+            Time.timeScale = 0;
+        }
+        XPBar.fillAmount = CurrXPAmout / LevelNeed;
+    }
+
+    public void Continue()
+    {
+        Panel.SetActive(false);
+        Time.timeScale = 1;
     }
 }

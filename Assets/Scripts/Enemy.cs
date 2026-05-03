@@ -24,9 +24,8 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         Vector2 direction = new Vector2(
-    target.position.x - transform.position.x,
-    target.position.y - transform.position.y
-);
+            target.position.x - transform.position.x,
+            target.position.y - transform.position.y);
 
         float distance = direction.magnitude;
         if (isDispawnable && distance > dispawnDistance)
@@ -52,7 +51,6 @@ public class Enemy : MonoBehaviour
         {
             Sprite.flipX = false;
         }
-
     }
 
 
@@ -70,7 +68,7 @@ public class Enemy : MonoBehaviour
     {
         if (Heath <= 0)
         {
-            Instantiate(XPPrefab);
+            GameObject Prefab = Instantiate(XPPrefab,transform.position,Quaternion.identity);
             Destroy(this.gameObject);
         }
     }
