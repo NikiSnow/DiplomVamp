@@ -68,7 +68,7 @@ public class Enemy : MonoBehaviour
     {
         if (Heath <= 0)
         {
-            GameObject Prefab = Instantiate(XPPrefab,transform.position,Quaternion.identity);
+            //GameObject Prefab = Instantiate(XPPrefab,transform.position,Quaternion.identity);
             Destroy(this.gameObject);
         }
     }

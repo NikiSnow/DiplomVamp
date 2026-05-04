@@ -22,6 +22,13 @@ public class Player : MonoBehaviour
 
     [SerializeField] Image HealthVisual;
 
+    [Header("PassiveAdds")]
+    [SerializeField] int Armor = 0;
+    [SerializeField] int AddSpeed = 0;
+    [SerializeField] int HealthRegen = 0;
+    [SerializeField] int AddDmg = 0;
+    [SerializeField] int AddAttackScale = 0;
+
     private float hor = 0f;
     private float ver = 0f;
 
