@@ -25,7 +25,7 @@ public class LevelManager : MonoBehaviour
     void SetVisual()
     {
         //Debug.Log(CurrXPAmout / LevelNeed);
-        if (CurrXPAmout > LevelNeed)
+        if (CurrXPAmout >= LevelNeed)
         {
             CurrXPAmout = 0;
             Panel.SetActive(true);
