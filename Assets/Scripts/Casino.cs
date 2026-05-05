@@ -11,6 +11,7 @@ public class Casino : MonoBehaviour
     [SerializeField] private Vector3 startPos = new Vector3(0, 0, 0);
     [SerializeField] private Vector3 topPos = new Vector3(0f, 500f, 0f);
     [SerializeField] private Vector3 downPos = new Vector3(0f, -500f, 0f);
+    [SerializeField] float Padding = 20f;
 
     [Header("Timing")]
     [SerializeField] private float stopDelay = 3.5f;
@@ -42,9 +43,9 @@ public class Casino : MonoBehaviour
     {
         // »нициализаци€ позиций на основе размера блока
         float blockHeight = block != null ? block.rect.width : 100f;
-        topPos = new Vector3(spinner.anchoredPosition.x, blockHeight * (amountOfBlocks / 2f), 0f);
+        topPos = new Vector3(spinner.anchoredPosition.x, (blockHeight + Padding) * (amountOfBlocks / 2f), 0f);
         startPos = new Vector3(spinner.anchoredPosition.x, 0f, 0f);
-        downPos = new Vector3(spinner.anchoredPosition.x, -(blockHeight * (amountOfBlocks / 2f)), 0f);
+        downPos = new Vector3(spinner.anchoredPosition.x, -((blockHeight + Padding) * (amountOfBlocks / 2f)), 0f);
     }
 
     private void OnEnable()
