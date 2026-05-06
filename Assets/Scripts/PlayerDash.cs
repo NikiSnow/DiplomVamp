@@ -17,12 +17,25 @@ public class PlayerDash : MonoBehaviour
     [SerializeField] private float DashCooldown = 1.1f;
     [SerializeField] private float EndDashVelocityMultiplier = 0.25f;
 
+    [Header("Dash Buff")]
+    [SerializeField] private float DashPowerMultiplier = 1.25f;
+    [SerializeField] private float DashDurationBonus = 0.04f;
+    [SerializeField] private float DashCooldownReduction = 0.15f;
+
+    [Header("Invulnerability")]
+    [SerializeField] private float PostDashInvulnerabilityTime = 0.35f;
+
     [Header("Enemy Push")]
     [SerializeField] private LayerMask EnemyLayer = ~0;
     [SerializeField] private float PushRadius = 1.25f;
     [SerializeField] private float PushForce = 9f;
     [SerializeField] private float EnemyControlLockTime = 0.22f;
     [SerializeField] private float DashDamage = 0f;
+
+    [Header("Enemy Push Buff")]
+    [SerializeField] private float PushPowerMultiplier = 1.35f;
+    [SerializeField] private float PushRadiusBonus = 0.2f;
+    [SerializeField] private float EnemyControlLockBonus = 0.08f;
 
     [Header("Effects")]
     [SerializeField] private GameObject DashStartEffectPrefab;
@@ -150,8 +163,11 @@ public class PlayerDash : MonoBehaviour
 
         dashDirection.Normalize();
 
-        dashTimer = DashDuration;
-        cooldownTimer = DashCooldown;
+        float finalDashDuration = GetFinalDashDuration();
+        float finalCooldown = GetFinalDashCooldown();
+
+        dashTimer = finalDashDuration;
+        cooldownTimer = finalCooldown;
 
         lastDashPushCount = 0;
         hitEnemiesThisDash.Clear();
@@ -159,6 +175,7 @@ public class PlayerDash : MonoBehaviour
         if (Player != null)
         {
             Player.SetMovementLocked(true);
+            Player.StartInvulnerability(finalDashDuration + PostDashInvulnerabilityTime);
         }
 
         if (DashTrail != null)
@@ -193,7 +210,7 @@ public class PlayerDash : MonoBehaviour
 
         if (Rb != null)
         {
-            Rb.linearVelocity = dashDirection * DashSpeed * surfaceDashMultiplier;
+            Rb.linearVelocity = dashDirection * GetFinalDashSpeed() * surfaceDashMultiplier;
         }
 
         if (dashTimer <= 0f)
@@ -231,7 +248,7 @@ public class PlayerDash : MonoBehaviour
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(
             transform.position,
-            PushRadius,
+            GetFinalPushRadius(),
             EnemyLayer
         );
 
@@ -279,8 +296,8 @@ public class PlayerDash : MonoBehaviour
 
             enemy.ApplyKnockback(
                 pushDirection,
-                PushForce * playerSurfacePushMultiplier,
-                EnemyControlLockTime,
+                GetFinalPushForce() * playerSurfacePushMultiplier,
+                GetFinalEnemyControlLockTime(),
                 DashDamage
             );
 
@@ -298,6 +315,36 @@ public class PlayerDash : MonoBehaviour
         }
     }
 
+    private float GetFinalDashSpeed()
+    {
+        return DashSpeed * DashPowerMultiplier;
+    }
+
+    private float GetFinalDashDuration()
+    {
+        return Mathf.Max(0.01f, DashDuration + DashDurationBonus);
+    }
+
+    private float GetFinalDashCooldown()
+    {
+        return Mathf.Max(0.1f, DashCooldown - DashCooldownReduction);
+    }
+
+    private float GetFinalPushForce()
+    {
+        return PushForce * PushPowerMultiplier;
+    }
+
+    private float GetFinalPushRadius()
+    {
+        return Mathf.Max(0.05f, PushRadius + PushRadiusBonus);
+    }
+
+    private float GetFinalEnemyControlLockTime()
+    {
+        return Mathf.Max(0f, EnemyControlLockTime + EnemyControlLockBonus);
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (!DrawDebugRadius)
@@ -305,6 +352,6 @@ public class PlayerDash : MonoBehaviour
             return;
         }
 
-        Gizmos.DrawWireSphere(transform.position, PushRadius);
+        Gizmos.DrawWireSphere(transform.position, GetFinalPushRadius());
     }
 }

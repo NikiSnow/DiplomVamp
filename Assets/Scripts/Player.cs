@@ -26,11 +26,15 @@ public class Player : MonoBehaviour
     [SerializeField] private Image HealthVisual;
 
     [Header("PassiveAdds")]
-    [SerializeField] private int Armor = 0;
-    [SerializeField] private int AddSpeed = 0;
-    [SerializeField] private int HealthRegen = 0;
-    [SerializeField] private int AddDmg = 0;
-    [SerializeField] private int AddAttackScale = 0;
+    [SerializeField] private int Armor = 0; // White
+    [SerializeField] private int HealthRegen = 0; // White
+    [SerializeField] private int AddMaxHp = 0; // Green
+    [SerializeField] private int AddDmg = 0; // Green
+    [SerializeField] private float AddAttackScale = 1f; // Blue
+    [SerializeField] private int AddSpeed = 0; // Blue
+
+    [Header("Invulnerability")]
+    [SerializeField] private bool ShowInvulnerabilityDebug = false;
 
     private float hor = 0f;
     private float ver = 0f;
@@ -39,16 +43,24 @@ public class Player : MonoBehaviour
     private Vector2 targetVelocity;
 
     private bool movementLocked = false;
+    private float invulnerabilityTimer = 0f;
 
     public Vector2 InputVector => input;
     public bool HasMovementInput => input.sqrMagnitude > 0.0001f;
     public Rigidbody2D PlayerRb => Rb;
+
     public float BaseSpeed => Speed;
+    public float CurrentMaxHp => MaxHp + AddMaxHp;
+
     public int CurrentArmor => Armor;
-    public int CurrentAddSpeed => AddSpeed;
     public int CurrentHealthRegen => HealthRegen;
+    public int CurrentAddMaxHp => AddMaxHp;
     public int CurrentAddDmg => AddDmg;
-    public int CurrentAddAttackScale => AddAttackScale;
+    public float CurrentAddAttackScale => AddAttackScale;
+    public int CurrentAddSpeed => AddSpeed;
+
+    public bool IsInvulnerable => invulnerabilityTimer > 0f;
+    public float InvulnerabilityRemaining => Mathf.Max(0f, invulnerabilityTimer);
 
     public string CurrentSurfaceName
     {
@@ -137,7 +149,7 @@ public class Player : MonoBehaviour
             LevelMan = FindObjectOfType<LevelManager>();
         }
 
-        CurrHp = Mathf.Clamp(CurrHp, 0f, MaxHp);
+        CurrHp = Mathf.Clamp(CurrHp, 0f, CurrentMaxHp);
         UpdateHealthVisual();
     }
 
@@ -145,6 +157,7 @@ public class Player : MonoBehaviour
     {
         ReadInput();
         UpdateFlip();
+        UpdateInvulnerability();
     }
 
     private void FixedUpdate()
@@ -223,16 +236,104 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void UpdateInvulnerability()
+    {
+        if (invulnerabilityTimer <= 0f)
+        {
+            return;
+        }
+
+        invulnerabilityTimer -= Time.deltaTime;
+
+        if (invulnerabilityTimer < 0f)
+        {
+            invulnerabilityTimer = 0f;
+        }
+
+        if (ShowInvulnerabilityDebug)
+        {
+            Debug.Log("Player invulnerable: " + invulnerabilityTimer.ToString("F2"));
+        }
+    }
+
+    public void StartInvulnerability(float duration)
+    {
+        if (duration <= 0f)
+        {
+            return;
+        }
+
+        invulnerabilityTimer = Mathf.Max(invulnerabilityTimer, duration);
+    }
+
     public void SetMovementLocked(bool isLocked)
     {
         movementLocked = isLocked;
+
+        if (movementLocked && Rb != null)
+        {
+            Rb.linearVelocity = Vector2.zero;
+        }
     }
 
     public void TakeDamage(float damage)
     {
+        if (IsInvulnerable)
+        {
+            return;
+        }
+
         float finalDamage = Mathf.Max(0f, damage - Armor);
+
         CurrHp -= finalDamage;
+        CurrHp = Mathf.Clamp(CurrHp, 0f, CurrentMaxHp);
+
         HealthCheck();
+    }
+
+    public void GiveArmor(int Add)
+    {
+        Armor += Add;
+    }
+
+    public void GiveHPRegen(int Add)
+    {
+        HealthRegen += Add;
+    }
+
+    public void GiveMaxHp(int Add)
+    {
+        AddMaxHp += Add;
+
+        CurrHp += Add;
+        CurrHp = Mathf.Clamp(CurrHp, 0f, CurrentMaxHp);
+
+        UpdateHealthVisual();
+    }
+
+    public void GiveDmg(int Add)
+    {
+        AddDmg += Add;
+    }
+
+    public void GiveAttackScale(float Add)
+    {
+        AddAttackScale += Add;
+    }
+
+    public void GiveSpeed(int Add)
+    {
+        AddSpeed += Add;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -258,9 +359,9 @@ public class Player : MonoBehaviour
 
     private void UpdateHealthVisual()
     {
-        if (HealthVisual != null && MaxHp > 0f)
+        if (HealthVisual != null && CurrentMaxHp > 0f)
         {
-            HealthVisual.fillAmount = CurrHp / MaxHp;
+            HealthVisual.fillAmount = CurrHp / CurrentMaxHp;
         }
     }
 
