@@ -23,28 +23,99 @@ public class SurfaceInteractor : MonoBehaviour
     private float stayEffectTimer;
 
     public SurfaceTargetType TargetType => targetType;
-
     public bool HasActiveSurface => currentZone != null;
-
     public PhysicsSurfaceZone CurrentZone => currentZone;
 
-    public string CurrentSurfaceName => currentZone != null ? currentZone.SurfaceName : "Normal";
+    public string CurrentSurfaceName
+    {
+        get
+        {
+            if (currentZone == null)
+            {
+                return "Normal";
+            }
 
-    public PhysicsSurfaceType CurrentSurfaceType => currentZone != null
-        ? currentZone.SurfaceType
-        : PhysicsSurfaceType.Normal;
+            return currentZone.SurfaceName;
+        }
+    }
 
-    public float CurrentSpeedMultiplier => currentZone != null ? currentZone.SpeedMultiplier : 1f;
+    public PhysicsSurfaceType CurrentSurfaceType
+    {
+        get
+        {
+            if (currentZone == null)
+            {
+                return PhysicsSurfaceType.Normal;
+            }
 
-    public float CurrentAccelerationMultiplier => currentZone != null
-        ? currentZone.AccelerationMultiplier
-        : 1f;
+            return currentZone.SurfaceType;
+        }
+    }
 
-    public float CurrentDecelerationMultiplier => currentZone != null
-        ? currentZone.DecelerationMultiplier
-        : 1f;
+    public float CurrentSpeedMultiplier
+    {
+        get
+        {
+            if (currentZone == null)
+            {
+                return 1f;
+            }
 
-    public float CurrentDashMultiplier => currentZone != null ? currentZone.DashMultiplier : 1f;
+            return currentZone.SpeedMultiplier;
+        }
+    }
+
+    public float CurrentAccelerationMultiplier
+    {
+        get
+        {
+            if (currentZone == null)
+            {
+                return 1f;
+            }
+
+            return currentZone.AccelerationMultiplier;
+        }
+    }
+
+    public float CurrentDecelerationMultiplier
+    {
+        get
+        {
+            if (currentZone == null)
+            {
+                return 1f;
+            }
+
+            return currentZone.DecelerationMultiplier;
+        }
+    }
+
+    public float CurrentDashMultiplier
+    {
+        get
+        {
+            if (currentZone == null)
+            {
+                return 1f;
+            }
+
+            return currentZone.DashMultiplier;
+        }
+    }
+
+    public float CurrentSlowAmount
+    {
+        get
+        {
+            if (currentZone == null)
+            {
+                return 0f;
+            }
+
+            return Mathf.Clamp01(1f - currentZone.SpeedMultiplier);
+        }
+    }
 
     private void Reset()
     {
@@ -172,6 +243,11 @@ public class SurfaceInteractor : MonoBehaviour
         {
             PhysicsSurfaceZone candidate = activeZones[i];
 
+            if (candidate == null)
+            {
+                continue;
+            }
+
             if (candidate.Priority > bestZone.Priority)
             {
                 bestZone = candidate;
@@ -205,6 +281,11 @@ public class SurfaceInteractor : MonoBehaviour
 
     private void SpawnEnterEffect(PhysicsSurfaceZone zone)
     {
+        if (zone == null)
+        {
+            return;
+        }
+
         if (zone.EnterEffectPrefab == null)
         {
             return;

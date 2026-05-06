@@ -26,11 +26,11 @@ public class Player : MonoBehaviour
     [SerializeField] private Image HealthVisual;
 
     [Header("PassiveAdds")]
-    [SerializeField] int Armor = 0;
-    [SerializeField] int AddSpeed = 0;
-    [SerializeField] int HealthRegen = 0;
-    [SerializeField] int AddDmg = 0;
-    [SerializeField] int AddAttackScale = 0;
+    [SerializeField] private int Armor = 0;
+    [SerializeField] private int AddSpeed = 0;
+    [SerializeField] private int HealthRegen = 0;
+    [SerializeField] private int AddDmg = 0;
+    [SerializeField] private int AddAttackScale = 0;
 
     private float hor = 0f;
     private float ver = 0f;
@@ -44,6 +44,11 @@ public class Player : MonoBehaviour
     public bool HasMovementInput => input.sqrMagnitude > 0.0001f;
     public Rigidbody2D PlayerRb => Rb;
     public float BaseSpeed => Speed;
+    public int CurrentArmor => Armor;
+    public int CurrentAddSpeed => AddSpeed;
+    public int CurrentHealthRegen => HealthRegen;
+    public int CurrentAddDmg => AddDmg;
+    public int CurrentAddAttackScale => AddAttackScale;
 
     public string CurrentSurfaceName
     {
@@ -167,6 +172,11 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
+        if (Rb == null)
+        {
+            return;
+        }
+
         float speedMultiplier = 1f;
         float acceleration = GroundAcceleration;
         float deceleration = GroundDeceleration;
@@ -184,7 +194,7 @@ public class Player : MonoBehaviour
             deceleration = WaterEffect.GetCurrentDeceleration(GroundDeceleration);
         }
 
-        float finalSpeed = Speed * speedMultiplier;
+        float finalSpeed = (Speed + AddSpeed) * speedMultiplier;
         targetVelocity = input * finalSpeed;
 
         float moveRate = HasMovementInput ? acceleration : deceleration;
@@ -220,7 +230,8 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        CurrHp -= damage;
+        float finalDamage = Mathf.Max(0f, damage - Armor);
+        CurrHp -= finalDamage;
         HealthCheck();
     }
 
@@ -239,7 +250,7 @@ public class Player : MonoBehaviour
     {
         UpdateHealthVisual();
 
-        if (CurrHp <= 0)
+        if (CurrHp <= 0f)
         {
             SceneManager.LoadScene(gameObject.scene.name);
         }
@@ -247,7 +258,7 @@ public class Player : MonoBehaviour
 
     private void UpdateHealthVisual()
     {
-        if (HealthVisual != null)
+        if (HealthVisual != null && MaxHp > 0f)
         {
             HealthVisual.fillAmount = CurrHp / MaxHp;
         }

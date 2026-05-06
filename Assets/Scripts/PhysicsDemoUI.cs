@@ -13,7 +13,7 @@ public class PhysicsDemoUI : MonoBehaviour
     [Header("OnGUI Demo Panel")]
     [SerializeField] private bool UseOnGUI = true;
     [SerializeField] private Vector2 PanelPosition = new Vector2(16f, 16f);
-    [SerializeField] private Vector2 PanelSize = new Vector2(370f, 170f);
+    [SerializeField] private Vector2 PanelSize = new Vector2(390f, 190f);
 
     [Header("Refresh")]
     [SerializeField] private float RefreshInterval = 0.1f;

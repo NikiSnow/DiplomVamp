@@ -46,7 +46,6 @@ public class PlayerDash : MonoBehaviour
     public bool IsDashing => dashTimer > 0f;
     public int LastDashPushCount => lastDashPushCount;
     public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);
-
     public bool IsReady => cooldownTimer <= 0f && !IsDashing;
 
     private void Reset()

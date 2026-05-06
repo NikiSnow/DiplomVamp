@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 7489674496169498753}
   - component: {fileID: 8424323587979997047}
   - component: {fileID: 3762137909132276265}
-  m_Layer: 0
+  - component: {fileID: 2997950738289473430}
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,12 +178,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 2
   Rb: {fileID: 7489674496169498753}
+  rb: {fileID: 7489674496169498753}
+  target: {fileID: 0}
+  SurfaceInteractor: {fileID: 0}
   Heath: 10
   Dmg: 1
-  target: {fileID: 0}
   Sprite: {fileID: 2998774945458383539}
-  rb: {fileID: 7489674496169498753}
   isDispawnable: 0
   dispawnDistance: 0
   XPPrefab: {fileID: 5062602457112851216, guid: bbe18eacf2d70344898d37b90e157e5d, type: 3}
+  KnockbackFriction: 18
+  MinKnockbackVelocity: 0.1
   InRot: 0
+--- !u!114 &2997950738289473430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6832003289906673716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a4c1bbc617e17f478b1ce085c612ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetType: 1
+  spriteRenderer: {fileID: 2998774945458383539}
+  enableDebugLogs: 0

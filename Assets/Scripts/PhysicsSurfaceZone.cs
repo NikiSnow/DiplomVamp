@@ -67,7 +67,20 @@ public class PhysicsSurfaceZone : MonoBehaviour
     private void Reset()
     {
         Collider2D zoneCollider = GetComponent<Collider2D>();
-        zoneCollider.isTrigger = true;
+
+        if (zoneCollider != null)
+        {
+            zoneCollider.isTrigger = true;
+        }
+    }
+
+    private void OnValidate()
+    {
+        speedMultiplier = Mathf.Clamp(speedMultiplier, 0.1f, 1.5f);
+        accelerationMultiplier = Mathf.Clamp(accelerationMultiplier, 0.1f, 2f);
+        decelerationMultiplier = Mathf.Clamp(decelerationMultiplier, 0.1f, 2f);
+        dashMultiplier = Mathf.Clamp(dashMultiplier, 0.1f, 1.5f);
+        stayEffectInterval = Mathf.Max(0.05f, stayEffectInterval);
     }
 
     public bool Affects(SurfaceTargetType targetType)
