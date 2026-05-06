@@ -9,6 +9,7 @@ public class Chest : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             CasinoScr.StartGambling();
+            Destroy(this.gameObject);
         }
     }
 }

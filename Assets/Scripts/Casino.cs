@@ -68,6 +68,11 @@ public class Casino : MonoBehaviour
     private Vector3 targetPosition;
     private System.Random random = new System.Random();
 
+    private Vector3 stopStartPosition;
+    private float stopStartTime;
+    private float stopStartDistance;
+    private bool hasFixedStartPosition = false;
+
 
     float HalfBlock;
 
@@ -82,7 +87,7 @@ public class Casino : MonoBehaviour
         topPos = new Vector3(spinner.anchoredPosition.x, (blockHeight + Padding) * (amountOfBlocks / 2f), 0f);
         startPos = new Vector3(spinner.anchoredPosition.x, 0f, 0f);
         downPos = new Vector3(spinner.anchoredPosition.x, -((blockHeight + Padding) * (amountOfBlocks / 2f)), 0f);
-        StartGambling();
+        //StartGambling();
     }
 
     public void StartGambling()
@@ -113,6 +118,8 @@ public class Casino : MonoBehaviour
         shouldStop = false;
         isStopped = false;
         isSpinning = true;
+
+        hasFixedStartPosition = false;
     }
 
     private Vector3 GetRandomTargetPosition()
@@ -183,15 +190,30 @@ public class Casino : MonoBehaviour
         }
         else if (!isStopped)
         {
-            // ѕлавна€ остановка на целевой позиции
-            //float stopDistance = Vector3.Distance(targetPosition, topPos);
-            //float stopDistCovered = (currentTime - stopTime) * StoppingSpeed;
-            //float stopProgress = stopDistCovered / stopDistance;
-            //spinner.anchoredPosition = Vector3.Lerp(targetPosition, topPos, stopProgress);
-            OnSpinnerStopped();
-            isStopped = true;
-            isSpinning = false;
-            spinner.anchoredPosition = targetPosition;
+            if (!hasFixedStartPosition)
+            {
+                stopStartPosition = spinner.anchoredPosition;
+                stopStartTime = currentTime;
+                stopStartDistance = Vector3.Distance(targetPosition, stopStartPosition);
+                hasFixedStartPosition = true;
+            }
+
+            // ¬ычисл€ем прогресс остановки
+            float stopDistCovered = (currentTime - stopStartTime) * StoppingSpeed;
+            float stopProgress = stopDistCovered / stopStartDistance;
+            stopProgress = Mathf.Clamp01(stopProgress);
+
+            // ѕлавно двигаемс€ от начальной позиции к целевой
+            spinner.anchoredPosition = Vector3.Lerp(downPos, targetPosition, stopProgress);
+
+            // ѕровер€ем, завершилась ли остановка
+            if (stopProgress >= 1f)
+            {
+                isStopped = true;
+                isSpinning = false;
+                spinner.anchoredPosition = targetPosition;
+                OnSpinnerStopped();
+            }
         }
     }
 
@@ -277,5 +299,15 @@ public class Casino : MonoBehaviour
             winX2 = Mathf.Clamp(winX2, lossR, 1f);
         if (winX3 < winX2 || winX3 > 1f)
             winX3 = Mathf.Clamp(winX3, winX2, 1f);
+    }
+
+    public void ContinueBut()
+    {
+        ThePlayer.ChestRewardPanel.SetActive(false);
+        AudioListener.pause = false;
+
+        panel.SetActive(false);
+
+        Time.timeScale = 1f;
     }
 }

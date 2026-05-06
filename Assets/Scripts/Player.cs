@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -32,6 +33,9 @@ public class Player : MonoBehaviour
     [SerializeField] private int AddDmg = 0; // Green
     [SerializeField] private float AddAttackScale = 1f; // Blue
     [SerializeField] private int AddSpeed = 0; // Blue
+
+    [SerializeField] public GameObject ChestRewardPanel;
+    [SerializeField] TMP_Text ChestRewardText;
 
     [Header("Invulnerability")]
     [SerializeField] private bool ShowInvulnerabilityDebug = false;
@@ -291,14 +295,24 @@ public class Player : MonoBehaviour
         HealthCheck();
     }
 
+    private void ShowRewardResult(string RewardText)
+    {
+        ChestRewardPanel.SetActive(true);
+        ChestRewardText.text = RewardText;
+    }
+
     public void GiveArmor(int Add)
     {
         Armor += Add;
+        Debug.Log("Passive Add Armor" + Add);
+        ShowRewardResult("Броня "+Add);
     }
 
     public void GiveHPRegen(int Add)
     {
         HealthRegen += Add;
+        Debug.Log("Passive Add HpRegen" + Add);
+        ShowRewardResult("Регенирацию здоровья +" + Add);
     }
 
     public void GiveMaxHp(int Add)
@@ -309,21 +323,29 @@ public class Player : MonoBehaviour
         CurrHp = Mathf.Clamp(CurrHp, 0f, CurrentMaxHp);
 
         UpdateHealthVisual();
+        Debug.Log("Passive Add MaxHp" + Add);
+        ShowRewardResult("Максимальное здоровье +" + Add);
     }
 
     public void GiveDmg(int Add)
     {
         AddDmg += Add;
+        Debug.Log("Passive Add Dmg" + Add);
+        ShowRewardResult("Урон +" + Add);
     }
 
     public void GiveAttackScale(float Add)
     {
         AddAttackScale += Add;
+        Debug.Log("Passive Add AttackScale" + Add);
+        ShowRewardResult("Радиус скиллов увеличен на " + Add);
     }
 
     public void GiveSpeed(int Add)
     {
         AddSpeed += Add;
+        Debug.Log("Passive Add Speed MoveSpeed" + Add);
+        ShowRewardResult("Скороть передвижения " + Add);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

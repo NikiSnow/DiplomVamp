@@ -269,10 +269,10 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        if (XPPrefab != null)
-        {
-            Instantiate(XPPrefab, transform.position, Quaternion.identity);
-        }
+        //if (XPPrefab != null)
+        //{
+        //    Instantiate(XPPrefab, transform.position, Quaternion.identity);
+        //}
 
         Destroy(gameObject);
     }
