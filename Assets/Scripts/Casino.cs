@@ -1,23 +1,16 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Casino : MonoBehaviour
 {
-
-    [SerializeField] GameObject ObjPlayer;
-    [SerializeField] Player ThePlayer;
     [SerializeField] private GameObject panel;
     [SerializeField] private RectTransform spinner;
     [SerializeField] private float speed = 2500f;
-    [SerializeField] float StoppingSpeed = 50f;
 
     [Header("Positions")]
     [SerializeField] private Vector3 startPos = new Vector3(0, 0, 0);
     [SerializeField] private Vector3 topPos = new Vector3(0f, 500f, 0f);
     [SerializeField] private Vector3 downPos = new Vector3(0f, -500f, 0f);
-    [SerializeField] float Padding = 20f;
 
     [Header("Timing")]
     [SerializeField] private float stopDelay = 3.5f;
@@ -36,29 +29,6 @@ public class Casino : MonoBehaviour
     [SerializeField] private float winX2 = 0.7f;
     [SerializeField] private float winX3 = 0.9f;
 
-    [SerializeField] int TempMultip = 1;
-    [SerializeField] private List<GameObject> ChildSecrets;
-
-    [Header("PassiveRewards")]
-    [Header("WhitePassiveRewards")]
-    [SerializeField] int WhiteAddArmor = 1;
-    [SerializeField] int WhiteAddHealthRegen = 1;
-    [Header("GreenPassiveRewards")]
-    [SerializeField] int GreenAddArmor = 3;
-    [SerializeField] int GreenAddHealthRegen = 2;
-    [SerializeField] int GreenAddMaxHp = 15;
-    [SerializeField] int GreenAddDmg = 5;
-    [Header("BluePassiveRewards")]
-    [SerializeField] int BlueAddArmor = 5;
-    [SerializeField] int BlueAddHealthRegen = 5;
-    [SerializeField] int BlueAddMaxHp = 25;
-    [SerializeField] int BlueAddDmg = 15;
-    [SerializeField] float BlueAddAttackScale = 0.1f;
-    [SerializeField] int BlueAddSpeed = 1;
-    [Header("PrefabRewards")]
-    [SerializeField] private List<GameObject> PurpleRewardPrefabs;
-    [SerializeField] private List<GameObject> YellowRewardPrefabs;
-
     private float startTime;
     private float journeyLength;
     private bool isSpinning = false;
@@ -68,31 +38,24 @@ public class Casino : MonoBehaviour
     private Vector3 targetPosition;
     private System.Random random = new System.Random();
 
-
-    float HalfBlock;
-
     private void Start()
     {
-
         // Инициализация позиций на основе размера блока
         float blockHeight = block != null ? block.rect.width : 100f;
-        HalfBlock = blockHeight / 2;
-        //Debug.Log(blockHeight);
-        //Debug.Log(HalfBlock);
-        topPos = new Vector3(spinner.anchoredPosition.x, (blockHeight + Padding) * (amountOfBlocks / 2f), 0f);
+        topPos = new Vector3(spinner.anchoredPosition.x, blockHeight * (amountOfBlocks / 2f), 0f);
         startPos = new Vector3(spinner.anchoredPosition.x, 0f, 0f);
-        downPos = new Vector3(spinner.anchoredPosition.x, -((blockHeight + Padding) * (amountOfBlocks / 2f)), 0f);
+        downPos = new Vector3(spinner.anchoredPosition.x, -(blockHeight * (amountOfBlocks / 2f)), 0f);
+    }
+
+    private void OnEnable()
+    {
         StartGambling();
     }
 
     public void StartGambling()
     {
+        Time.timeScale = 0f;
         AudioListener.pause = true;
-
-        for(int i = 0; i < ChildSecrets.Count; i++)
-        {
-            ChildSecrets[i].SetActive(false);
-        }
 
         panel.SetActive(true);
         ResetSpinner();
@@ -101,7 +64,6 @@ public class Casino : MonoBehaviour
         StartCoroutine(StopRoutine());
 
         isSpinning = true;
-        Time.timeScale = 0f;
     }
 
     private void ResetSpinner()
@@ -117,41 +79,43 @@ public class Casino : MonoBehaviour
 
     private Vector3 GetRandomTargetPosition()
     {
-        double r = random.NextDouble();
-        //Zero = 2 item
-        if(r < 0.65) //white
+        float randomValue = (float)random.NextDouble();
+        float targetOffset;
+
+        if (randomValue < lossR)
         {
-            TempMultip = 2; //3
-            ChildSecrets[2].SetActive(true);
-            Debug.Log("White");
+            // Проигрыш - случайная комбинация
+            targetOffset = GetRandomOffset();
+            Debug.Log("Loss");
         }
-        else if (r < 0.85) //Green
+        else if (randomValue < winX2)
         {
-            TempMultip = 6;
-            ChildSecrets[4].SetActive(true);
-            Debug.Log("Green");
+            targetOffset = cyanPos;
+            Debug.Log("Win x2");
         }
-        else if (r < 0.95) //Blue
+        else if (randomValue < winX3)
         {
-            TempMultip = 8;
-            ChildSecrets[5].SetActive(true);
-            Debug.Log("Blue");
+            targetOffset = bluePos;
+            Debug.Log("Win x3");
         }
-        else if (r < 0.98) //Purple
+        else
         {
-            TempMultip = 12;
-            ChildSecrets[7].SetActive(true);
-            Debug.Log("Purple");
-        }
-        else if (r < 1) //Yellow
-        {
-            TempMultip = 14;
-            ChildSecrets[8].SetActive(true);
-            Debug.Log("Yellow");
+            targetOffset = purplePos;
+            Debug.Log("Win x5");
         }
 
+        return new Vector3(0f, downPos.y + targetOffset, 0f);
+    }
 
-            return new Vector3(0f, downPos.y + (HalfBlock * TempMultip), 0f);
+    private float GetRandomOffset()
+    {
+        float randomValue = (float)random.NextDouble();
+
+        if (randomValue < 0.33f)
+            return cyanPos;
+        if (randomValue < 0.66f)
+            return bluePos;
+        return purplePos;
     }
 
     private IEnumerator StopRoutine()
@@ -184,88 +148,44 @@ public class Casino : MonoBehaviour
         else if (!isStopped)
         {
             // Плавная остановка на целевой позиции
-            //float stopDistance = Vector3.Distance(targetPosition, topPos);
-            //float stopDistCovered = (currentTime - stopTime) * StoppingSpeed;
-            //float stopProgress = stopDistCovered / stopDistance;
-            //spinner.anchoredPosition = Vector3.Lerp(targetPosition, topPos, stopProgress);
-            OnSpinnerStopped();
-            isStopped = true;
-            isSpinning = false;
-            spinner.anchoredPosition = targetPosition;
+            float stopDistance = Vector3.Distance(targetPosition, topPos);
+            float stopDistCovered = (currentTime - stopTime) * speed;
+            float stopProgress = stopDistCovered / stopDistance;
+
+            spinner.anchoredPosition = Vector3.Lerp(targetPosition, topPos, stopProgress);
+
+            if (stopProgress >= 1f)
+            {
+                isStopped = true;
+                isSpinning = false;
+                spinner.anchoredPosition = targetPosition;
+
+                // Здесь можно добавить логику показа результата
+                OnSpinnerStopped();
+            }
         }
     }
 
     private void OnSpinnerStopped()
     {
-        double r = random.NextDouble();
-        if (TempMultip == 2) //White
-        {
-            if (r < 0.5)
-            {
-                ThePlayer.GiveArmor(WhiteAddArmor);
-            }
-            else
-            {
-                ThePlayer.GiveHPRegen(WhiteAddHealthRegen);
-            }
-        }
-        else if (TempMultip == 6) //Green
-        {
-            if (r < 0.25)
-            {
-                ThePlayer.GiveArmor(GreenAddArmor);
-            }
-            else if(r < 0.5)
-            {
-                ThePlayer.GiveHPRegen(GreenAddHealthRegen);
-            }
-            else if (r < 0.75)
-            {
-                ThePlayer.GiveMaxHp(GreenAddMaxHp);
-            }
-            else if (r < 1)
-            {
-                ThePlayer.GiveDmg(GreenAddDmg);
-            }
-        }
-        else if (TempMultip == 8) //Blue
-        {
-            if (r < 0.25)
-            {
-                ThePlayer.GiveArmor(BlueAddArmor);
-            }
-            else if (r < 0.5)
-            {
-                ThePlayer.GiveHPRegen(BlueAddHealthRegen);
-            }
-            else if (r < 0.75)
-            {
-                ThePlayer.GiveMaxHp(BlueAddMaxHp);
-            }
-            else if (r < 1)
-            {
-                ThePlayer.GiveDmg(BlueAddDmg);
-            }
-            else if (r < 1)
-            {
-                ThePlayer.GiveAttackScale(BlueAddAttackScale);
-            }
-            else if (r < 1)
-            {
-                ThePlayer.GiveSpeed(BlueAddSpeed);
-            }
+        // Определяем выпавший результат
+        float yOffset = spinner.anchoredPosition.y - downPos.y;
+        string result = GetResultFromOffset(yOffset);
+        Debug.Log($"Spinner stopped on: {result}");
 
-        }
-        else if (TempMultip == 12) //Purple
-        {
-            GameObject newReward = Instantiate(PurpleRewardPrefabs[0]);
-            newReward.GetComponent<PurpleReward>();
-        }
-        else if (TempMultip == 14)
-        {
-            GameObject newReward = Instantiate(YellowRewardPrefabs[0]);
-            newReward.GetComponent<YellowReward>();
-        }
+        // Здесь можно вызвать событие для UI или другой логики
+        // Например: OnGamblingComplete?.Invoke(result);
+    }
+
+    private string GetResultFromOffset(float offset)
+    {
+        if (Mathf.Approximately(offset, cyanPos))
+            return "Cyan";
+        if (Mathf.Approximately(offset, bluePos))
+            return "Blue";
+        if (Mathf.Approximately(offset, purplePos))
+            return "Purple";
+        return "Unknown";
     }
 
     private void OnValidate()
