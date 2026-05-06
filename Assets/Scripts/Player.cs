@@ -26,11 +26,12 @@ public class Player : MonoBehaviour
     [SerializeField] private Image HealthVisual;
 
     [Header("PassiveAdds")]
-    [SerializeField] int Armor = 0;
-    [SerializeField] int AddSpeed = 0;
-    [SerializeField] int HealthRegen = 0;
-    [SerializeField] int AddDmg = 0;
-    [SerializeField] int AddAttackScale = 0;
+    [SerializeField] int Armor = 0; //White
+    [SerializeField] int HealthRegen = 0; //White 
+    [SerializeField] int AddMaxHp = 0; //Green
+    [SerializeField] int AddDmg = 0; //Green
+    [SerializeField] float AddAttackScale = 1; //Blue
+    [SerializeField] int AddSpeed = 0; //Blue
 
     private float hor = 0f;
     private float ver = 0f;
@@ -134,6 +135,31 @@ public class Player : MonoBehaviour
 
         CurrHp = Mathf.Clamp(CurrHp, 0f, MaxHp);
         UpdateHealthVisual();
+    }
+
+    public void GiveArmor(int Add)
+    {
+        Armor = Armor + Add;
+    }
+    public void GiveHPRegen(int Add)
+    {
+        HealthRegen = HealthRegen + Add;
+    }
+    public void GiveMaxHp(int Add)
+    {
+        AddMaxHp = AddMaxHp + Add;
+    }
+    public void GiveDmg(int Add)
+    {
+        AddDmg = AddDmg + Add;
+    }
+    public void GiveAttackScale(float Add)
+    {
+        AddAttackScale = AddAttackScale + Add;
+    }
+    public void GiveSpeed(int Add)
+    {
+        AddSpeed = AddSpeed + Add;
     }
 
     private void Update()
