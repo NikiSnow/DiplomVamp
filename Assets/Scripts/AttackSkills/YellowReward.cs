@@ -5,7 +5,7 @@ public class YellowReward : MonoBehaviour
 {
     [SerializeField] GameObject Player;
     [SerializeField] Player ThePlayer;
-    [SerializeField] float MyCooldown = 1;
+    [SerializeField] float MyCooldown = 1f;
     [SerializeField] GameObject MyChild;
 
     private void OnEnable()
@@ -15,9 +15,12 @@ public class YellowReward : MonoBehaviour
 
     public IEnumerator WaitCD()
     {
-        Debug.Log("ChildWaitCD");
         yield return new WaitForSeconds(MyCooldown);
         MyChild.SetActive(true);
-        Debug.Log("ChildActive");
+    }
+
+    public void StartReload()
+    {
+        StartCoroutine(WaitCD());
     }
 }

@@ -28,7 +28,9 @@ public class ShivaScr : MonoBehaviour
     private void OnEnable()
     {
         //transform.localScale = Vector3.one * startScale;
+        transform.localScale = new Vector3(startScale, startScale, 1f);
         StartScaleAnimation(endScale, duration);
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -41,7 +43,7 @@ public class ShivaScr : MonoBehaviour
         if (enemy != null)
         {
             // Fallback если bufferScr не назначен
-            enemy.TakeDmg(10f);
+            enemy.TakeDmg(damage);
         }
     }
 
@@ -85,7 +87,8 @@ public class ShivaScr : MonoBehaviour
 
         // ‘иксируем конечные значени€
         transform.localScale = new Vector3(currentTargetScale, currentTargetScale, 1f);
-        StartCoroutine(MyParent.WaitCD());
+        //StartCoroutine(MyParent.WaitCD());
+        MyParent.StartReload();
         isAnimating = false;
         this.gameObject.SetActive(false);
 
