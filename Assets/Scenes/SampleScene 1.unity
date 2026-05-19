@@ -143,7 +143,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 20623644}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb96275698ccd4947832cedd45337a8e, type: 3}
   m_Name: 
@@ -373,10 +373,12 @@ MonoBehaviour:
   LevelMan: {fileID: 1601415916}
   HealthVisual: {fileID: 1824125151}
   Armor: 0
-  AddSpeed: 0
   HealthRegen: 0
+  AddMaxHp: 0
   AddDmg: 0
   AddAttackScale: 0
+  AddSpeed: 0
+  ShowInvulnerabilityDebug: 0
 --- !u!50 &294960195
 Rigidbody2D:
   serializedVersion: 5
@@ -592,6 +594,10 @@ MonoBehaviour:
   DashDuration: 0.16
   DashCooldown: 1.1
   EndDashVelocityMultiplier: 0.25
+  DashPowerMultiplier: 1.25
+  DashDurationBonus: 0.04
+  DashCooldownReduction: 0.15
+  PostDashInvulnerabilityTime: 0.35
   EnemyLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -599,6 +605,9 @@ MonoBehaviour:
   PushForce: 9
   EnemyControlLockTime: 0.22
   DashDamage: 0
+  PushPowerMultiplier: 1.35
+  PushRadiusBonus: 0.2
+  EnemyControlLockBonus: 0.08
   DashStartEffectPrefab: {fileID: 0}
   DashHitEffectPrefab: {fileID: 0}
   DashTrail: {fileID: 0}
