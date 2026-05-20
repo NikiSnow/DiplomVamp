@@ -268,10 +268,10 @@ public class Casino : MonoBehaviour
             {
                 ThePlayer.GiveDmg(BlueAddDmg);
             }
-            else if (r < 1)
-            {
-                ThePlayer.GiveAttackScale(BlueAddAttackScale);
-            }
+            //else if (r < 1)
+            //{
+            //    ThePlayer.GiveAttackScale(BlueAddAttackScale);
+            //}
             else if (r < 1)
             {
                 ThePlayer.GiveSpeed(BlueAddSpeed);

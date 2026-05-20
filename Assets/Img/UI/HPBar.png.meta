@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 85f099a897be1b84f97617a797c1f3d0
+guid: a254e2f089eaa0d429f4ddd396db1fe5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6937122563872544080
-    second: HPBar_0
+      213: 2748592094171128731
+    second: "ChatGPT Image 20 \u043C\u0430\u044F 2026 \u0433., 05_57_13 (1)-Photoroom_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 35, y: 33, z: 35, w: 33}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HPBar_0
+      name: "ChatGPT Image 20 \u043C\u0430\u044F 2026 \u0433., 05_57_13 (1)-Photoroom_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1013
-        height: 67
+        width: 2083
+        height: 724
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0baa70958c36abf90800000000000000
-      internalID: -6937122563872544080
+      spriteID: b93648d62f5f42620800000000000000
+      internalID: 2748592094171128731
       vertices: []
       indices: 
       edges: []
@@ -126,7 +126,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      HPBar_0: -6937122563872544080
+      "ChatGPT Image 20 \u043C\u0430\u044F 2026 \u0433., 05_57_13 (1)-Photoroom_0": 2748592094171128731
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

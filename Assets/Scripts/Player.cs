@@ -305,14 +305,14 @@ public class Player : MonoBehaviour
     {
         Armor += Add;
         Debug.Log("Passive Add Armor" + Add);
-        ShowRewardResult("Броня "+Add);
+        ShowRewardResult("Armor "+Add);
     }
 
     public void GiveHPRegen(int Add)
     {
         HealthRegen += Add;
         Debug.Log("Passive Add HpRegen" + Add);
-        ShowRewardResult("Регенирацию здоровья +" + Add);
+        ShowRewardResult("health regeneration +" + Add);
     }
 
     public void GiveMaxHp(int Add)
@@ -324,14 +324,14 @@ public class Player : MonoBehaviour
 
         UpdateHealthVisual();
         Debug.Log("Passive Add MaxHp" + Add);
-        ShowRewardResult("Максимальное здоровье +" + Add);
+        ShowRewardResult("Max hp +" + Add);
     }
 
     public void GiveDmg(int Add)
     {
         AddDmg += Add;
         Debug.Log("Passive Add Dmg" + Add);
-        ShowRewardResult("Урон +" + Add);
+        ShowRewardResult("Damage +" + Add);
     }
 
     public void GiveAttackScale(float Add)
@@ -345,7 +345,7 @@ public class Player : MonoBehaviour
     {
         AddSpeed += Add;
         Debug.Log("Passive Add Speed MoveSpeed" + Add);
-        ShowRewardResult("Скороть передвижения " + Add);
+        ShowRewardResult("Move speed " + Add);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
