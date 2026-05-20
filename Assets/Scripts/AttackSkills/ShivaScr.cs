@@ -24,14 +24,45 @@ public class ShivaScr : MonoBehaviour
     private float currentTargetScale = 1f;
     private float currentStartScale = 1f;
 
+    private float originalColliderRadius;
+    private float originalScale = 1f;
+
+    private void Awake()
+    {
+        // Сохраняем оригинальный радиус коллайдера
+        if (coll != null)
+        {
+            originalColliderRadius = coll.radius;
+        }
+        originalScale = startScale;
+    }
 
     private void OnEnable()
     {
         //transform.localScale = Vector3.one * startScale;
         transform.localScale = new Vector3(startScale, startScale, 1f);
+        UpdateColliderRadius(startScale);
         StartScaleAnimation(endScale, duration);
 
     }
+    private void UpdateColliderRadius(float currentScale)
+    {
+        if (coll != null)
+        {
+            // Радиус масштабируется пропорционально масштабу объекта
+            // Если оригинальный радиус был для масштаба 1, то:
+            // при масштабе 2 радиус будет originalColliderRadius * 2
+            //float scaleMultiplier = currentScale / originalScale;
+            //coll.radius = originalColliderRadius * (scaleMultiplier/2);
+            coll.radius = originalColliderRadius;
+
+            // Альтернативный вариант (если хотите привязать к текущему масштабу):
+            // coll.radius = originalColliderRadius * currentScale;
+
+            //Debug.Log($"Collider radius updated: {coll.radius} (scale: {currentScale})");
+        }
+    }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -80,18 +111,21 @@ public class ShivaScr : MonoBehaviour
             float currentScale = Mathf.Lerp(currentStartScale, currentTargetScale, t);
             transform.localScale = new Vector3(currentScale, currentScale, 1f);
 
-            //transform.position = Vector3.zero; // В Unity лучше использовать localPosition
+            // Синхронизируем радиус коллайдера с текущим масштабом
+            UpdateColliderRadius(currentScale);
 
             yield return null;
         }
 
         // Фиксируем конечные значения
         transform.localScale = new Vector3(currentTargetScale, currentTargetScale, 1f);
-        //StartCoroutine(MyParent.WaitCD());
+        UpdateColliderRadius(currentTargetScale); // Финальное обновление коллайдера
+
         MyParent.StartReload();
         isAnimating = false;
         this.gameObject.SetActive(false);
 
         Debug.Log("Scale animation completed!");
     }
+
 }

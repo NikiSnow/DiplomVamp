@@ -232,11 +232,11 @@ public class Player : MonoBehaviour
 
         if (hor > 0)
         {
-            PlayerSprite.flipX = true;
+            PlayerSprite.flipX = false;
         }
         else if (hor < 0)
         {
-            PlayerSprite.flipX = false;
+            PlayerSprite.flipX = true;
         }
     }
 

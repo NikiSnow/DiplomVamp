@@ -27,6 +27,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float KnockbackFriction = 18f;
     [SerializeField] private float MinKnockbackVelocity = 0.1f;
 
+    [SerializeField] Animator animator;
+
     public bool InRot = false;
 
     private float knockbackTimer = 0f;
@@ -239,11 +241,20 @@ public class Enemy : MonoBehaviour
 
         if (rb.linearVelocity.x > 0.05f)
         {
-            Sprite.flipX = true;
+            Sprite.flipX = false;
         }
         else if (rb.linearVelocity.x < -0.05f)
         {
-            Sprite.flipX = false;
+            Sprite.flipX = true;
+        }
+
+        if (rb.linearVelocityY > 0.05f)
+        {
+            animator.SetBool("Up", false);
+        }
+        else
+        {
+            animator.SetBool("Up", true);
         }
     }
 
