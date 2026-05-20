@@ -305,7 +305,7 @@ public class Player : MonoBehaviour
     {
         Armor += Add;
         Debug.Log("Passive Add Armor" + Add);
-        ShowRewardResult("Armor "+Add);
+        ShowRewardResult("Armor " + Add);
     }
 
     public void GiveHPRegen(int Add)
@@ -375,7 +375,8 @@ public class Player : MonoBehaviour
 
         if (CurrHp <= 0f)
         {
-            SceneManager.LoadScene(gameObject.scene.name);
+            //dead
+            SceneManager.LoadScene("MainMenuScene");
         }
     }
 

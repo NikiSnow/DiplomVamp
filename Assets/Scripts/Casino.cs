@@ -129,31 +129,31 @@ public class Casino : MonoBehaviour
         if(r < 0.65) //white
         {
             TempMultip = 2; //3
-            ChildSecrets[2].SetActive(true);
+            //ChildSecrets[2].SetActive(true);
             Debug.Log("White");
         }
         else if (r < 0.85) //Green
         {
             TempMultip = 6;
-            ChildSecrets[4].SetActive(true);
+            //ChildSecrets[4].SetActive(true);
             Debug.Log("Green");
         }
         else if (r < 0.95) //Blue
         {
             TempMultip = 8;
-            ChildSecrets[5].SetActive(true);
+            //ChildSecrets[5].SetActive(true);
             Debug.Log("Blue");
         }
         else if (r < 0.98) //Purple
         {
             TempMultip = 12;
-            ChildSecrets[7].SetActive(true);
+            //ChildSecrets[7].SetActive(true);
             Debug.Log("Purple");
         }
         else if (r < 1) //Yellow
         {
             TempMultip = 14;
-            ChildSecrets[8].SetActive(true);
+            //ChildSecrets[8].SetActive(true);
             Debug.Log("Yellow");
         }
 

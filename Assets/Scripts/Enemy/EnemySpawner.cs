@@ -1,4 +1,6 @@
 using System.Collections;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -7,10 +9,39 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float SpawnDelay = 1;
     [SerializeField] GameObject Player;
 
+    [Header("Timer")]
+    [SerializeField] TMP_Text TimerText;
+    private float elapsedTime = 0f;
+    private bool isRunning = true;
+
+
     private void Start()
     {
         StartCoroutine(EnemySpawn());
     }
+
+    private void Update()
+    {
+        if (!isRunning) return;
+
+        // Увеличиваем время
+        elapsedTime += Time.deltaTime;
+
+        // Обновляем текст
+        UpdateTimerDisplay();
+
+    }
+
+    private void UpdateTimerDisplay()
+    {
+        // Получаем минуты и секунды
+        int minutes = Mathf.FloorToInt(elapsedTime / 60f);
+        int seconds = Mathf.FloorToInt(elapsedTime % 60f);
+
+        // Форматируем в 00:00
+        TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
 
     IEnumerator EnemySpawn()
     {
@@ -29,10 +60,6 @@ public class EnemySpawner : MonoBehaviour
         Enemy CurrEnemyScr = CurrEnemy.GetComponent<Enemy>();
         CurrEnemyScr.target = Player.transform;
         CurrEnemy.transform.rotation = Quaternion.identity;
-
-
-
-
 
     }
 
