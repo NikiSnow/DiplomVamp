@@ -148,12 +148,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb96275698ccd4947832cedd45337a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ObjPlayer: {fileID: 0}
+  ThePlayer: {fileID: 0}
   panel: {fileID: 207455538}
   spinner: {fileID: 700575142}
   speed: 2000
+  StoppingSpeed: 50
   startPos: {x: 0, y: 0, z: 0}
   topPos: {x: 0, y: 328, z: 0}
   downPos: {x: 0, y: -328, z: 0}
+  Padding: 20
   stopDelay: 5
   amountOfBlocks: 3
   block: {fileID: 1717176757}
@@ -163,6 +167,22 @@ MonoBehaviour:
   lossR: 0.425
   winX2: 0.7
   winX3: 0.9
+  TempMultip: 1
+  ChildSecrets: []
+  WhiteAddArmor: 1
+  WhiteAddHealthRegen: 1
+  GreenAddArmor: 3
+  GreenAddHealthRegen: 2
+  GreenAddMaxHp: 15
+  GreenAddDmg: 5
+  BlueAddArmor: 5
+  BlueAddHealthRegen: 5
+  BlueAddMaxHp: 25
+  BlueAddDmg: 15
+  BlueAddAttackScale: 0.1
+  BlueAddSpeed: 1
+  PurpleRewardPrefabs: []
+  YellowRewardPrefabs: []
 --- !u!4 &20623646
 Transform:
   m_ObjectHideFlags: 0
@@ -378,6 +398,8 @@ MonoBehaviour:
   AddDmg: 0
   AddAttackScale: 0
   AddSpeed: 0
+  ChestRewardPanel: {fileID: 0}
+  ChestRewardText: {fileID: 0}
   ShowInvulnerabilityDebug: 0
 --- !u!50 &294960195
 Rigidbody2D:
@@ -522483,6 +522505,7 @@ MonoBehaviour:
   EnemyPrefab: {fileID: 6832003289906673716, guid: 26164362c7ae3844cbf5f0ebe776b137, type: 3}
   SpawnDelay: 1
   Player: {fileID: 294960193}
+  TimerText: {fileID: 0}
 --- !u!1 &1717176756
 GameObject:
   m_ObjectHideFlags: 0
@@ -522574,7 +522597,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &1818245592
 Grid:
   m_ObjectHideFlags: 0

@@ -59,6 +59,11 @@ public class Casino : MonoBehaviour
     [SerializeField] private List<GameObject> PurpleRewardPrefabs;
     [SerializeField] private List<GameObject> YellowRewardPrefabs;
 
+    [SerializeField] GameObject SkillsObj;
+
+    [SerializeField] bool ShoudPurp = false;
+    [SerializeField] bool ShoudYell = false;
+
     private float startTime;
     private float journeyLength;
     private bool isSpinning = false;
@@ -94,7 +99,7 @@ public class Casino : MonoBehaviour
     {
         AudioListener.pause = true;
 
-        for(int i = 0; i < ChildSecrets.Count; i++)
+        for (int i = 0; i < ChildSecrets.Count; i++)
         {
             ChildSecrets[i].SetActive(false);
         }
@@ -126,7 +131,7 @@ public class Casino : MonoBehaviour
     {
         double r = random.NextDouble();
         //Zero = 2 item
-        if(r < 0.65) //white
+        if (r < 0.65) //white
         {
             TempMultip = 2; //3
             //ChildSecrets[2].SetActive(true);
@@ -157,8 +162,18 @@ public class Casino : MonoBehaviour
             Debug.Log("Yellow");
         }
 
+        if (ShoudPurp)
+        {
+            TempMultip = 12;
+            Debug.Log("ShoudPurple");
 
-            return new Vector3(0f, downPos.y + (HalfBlock * TempMultip), 0f);
+        }
+        else if (ShoudYell)
+        {
+            TempMultip = 14;
+            Debug.Log("ShoudYellow");
+        }
+        return new Vector3(0f, downPos.y + (HalfBlock * TempMultip), 0f);
     }
 
     private IEnumerator StopRoutine()
@@ -237,7 +252,7 @@ public class Casino : MonoBehaviour
             {
                 ThePlayer.GiveArmor(GreenAddArmor);
             }
-            else if(r < 0.5)
+            else if (r < 0.5)
             {
                 ThePlayer.GiveHPRegen(GreenAddHealthRegen);
             }
@@ -281,12 +296,20 @@ public class Casino : MonoBehaviour
         else if (TempMultip == 12) //Purple
         {
             GameObject newReward = Instantiate(PurpleRewardPrefabs[0]);
-            newReward.GetComponent<PurpleReward>();
+            newReward.transform.SetParent(SkillsObj.transform);
+            YellowReward PurpRew = newReward.GetComponent<YellowReward>();
+            PurpRew.ThePlayer = ThePlayer;
+            PurpRew.Player = ObjPlayer;
+            ThePlayer.NewAbility();
         }
         else if (TempMultip == 14)
         {
             GameObject newReward = Instantiate(YellowRewardPrefabs[0]);
-            newReward.GetComponent<YellowReward>();
+            newReward.transform.SetParent(SkillsObj.transform);
+            YellowReward YelRew = newReward.GetComponent<YellowReward>();
+            YelRew.ThePlayer = ThePlayer;
+            YelRew.Player = ObjPlayer;
+            ThePlayer.NewAbility();
         }
     }
 

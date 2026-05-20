@@ -3,10 +3,16 @@ using UnityEngine;
 
 public class YellowReward : MonoBehaviour
 {
-    [SerializeField] GameObject Player;
-    [SerializeField] Player ThePlayer;
+    [SerializeField] public GameObject Player;
+    [SerializeField] public Player ThePlayer;
     [SerializeField] float MyCooldown = 1f;
     [SerializeField] GameObject MyChild;
+
+    private void Start()
+    {
+        this.transform.localPosition = Vector3.zero;
+
+    }
 
     private void OnEnable()
     {

@@ -1,5 +1,7 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -117,6 +119,9 @@ public class Player : MonoBehaviour
 
     public SurfaceInteractor CurrentSurfaceInteractor => SurfaceInteractor;
 
+    [SerializeField] Animator anim;
+    [SerializeField] EnemySpawner EnemySpawnScr;
+
     private void Reset()
     {
         Rb = GetComponent<Rigidbody2D>();
@@ -221,6 +226,14 @@ public class Player : MonoBehaviour
             targetVelocity,
             moveRate * Time.fixedDeltaTime
         );
+        if (Rb.linearVelocityX != 0 || Rb.linearVelocityY != 0)
+        {
+            anim.SetBool("Walk", true);
+        }
+        else
+        {
+            anim.SetBool("Walk", false);
+        }
     }
 
     private void UpdateFlip()
@@ -237,6 +250,14 @@ public class Player : MonoBehaviour
         else if (hor < 0)
         {
             PlayerSprite.flipX = true;
+        }
+        if (ver > 0)
+        {
+            anim.SetBool("Up", true);
+        }
+        else
+        {
+            anim.SetBool("Up", false);
         }
     }
 
@@ -348,6 +369,12 @@ public class Player : MonoBehaviour
         ShowRewardResult("Move speed " + Add);
     }
 
+    public void NewAbility()
+    {
+        Debug.Log("NewAbility");
+        ShowRewardResult("New ability");
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
@@ -376,6 +403,15 @@ public class Player : MonoBehaviour
         if (CurrHp <= 0f)
         {
             //dead
+            float savedTime = PlayerPrefs.GetFloat("Gametime", 0f);
+
+            // Проверяем, что новое время больше
+            if (EnemySpawnScr.elapsedTime > savedTime)
+            {
+                PlayerPrefs.SetFloat("Gametime", EnemySpawnScr.elapsedTime);
+                PlayerPrefs.Save();
+                Debug.Log($"Новый рекорд: {EnemySpawnScr.elapsedTime} секунд!");
+            }
             SceneManager.LoadScene("MainMenuScene");
         }
     }

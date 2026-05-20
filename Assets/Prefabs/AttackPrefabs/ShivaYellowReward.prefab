@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 4860258939255950595}
   ThePlayer: {fileID: 0}
-  MyCooldown: 1
+  MyCooldown: 3
   MyChild: {fileID: 8825220262624982703}
 --- !u!1 &8825220262624982703
 GameObject:

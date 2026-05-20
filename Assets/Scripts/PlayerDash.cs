@@ -61,6 +61,8 @@ public class PlayerDash : MonoBehaviour
     public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);
     public bool IsReady => cooldownTimer <= 0f && !IsDashing;
 
+    [SerializeField] Animator Anim;
+
     private void Reset()
     {
         Player = GetComponent<Player>();
@@ -154,6 +156,7 @@ public class PlayerDash : MonoBehaviour
 
     private void StartDash()
     {
+        Anim.SetTrigger("Dash");
         dashDirection = lastMoveDirection;
 
         if (dashDirection.sqrMagnitude <= 0.0001f)

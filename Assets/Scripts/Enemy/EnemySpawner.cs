@@ -11,13 +11,20 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Timer")]
     [SerializeField] TMP_Text TimerText;
-    private float elapsedTime = 0f;
+    public float elapsedTime = 0f;
     private bool isRunning = true;
 
+    [SerializeField] GameObject ChestPrefab;
+    [SerializeField] float ChestSpawnDelay = 15;
+    [SerializeField] Casino CasinoScr;
+
+    [SerializeField] GameObject EnemiesObj;
+    [SerializeField] GameObject ChestsObj;
 
     private void Start()
     {
         StartCoroutine(EnemySpawn());
+        StartCoroutine(ChestSpawn());
     }
 
     private void Update()
@@ -51,11 +58,31 @@ public class EnemySpawner : MonoBehaviour
             SpawnEnemy();
         }
     }
+    IEnumerator ChestSpawn()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(ChestSpawnDelay);
+            SpawnChest();
+        }
+    }
+    public void SpawnChest()
+    {
+        Vector2 poses = GetRandomPoint();
+        GameObject CurrChest = Instantiate(ChestPrefab);
+        CurrChest.transform.SetParent(ChestsObj.transform);
+        CurrChest.transform.position = new Vector3(Player.transform.position.x + poses.x + 20, Player.transform.position.y + poses.y + 10, 0);
+        CurrChest.transform.rotation = Quaternion.identity;
+        Chest CurrChestScr = CurrChest.GetComponent<Chest>();
+        CurrChestScr.CasinoScr = CasinoScr;
+
+    }
 
     public void SpawnEnemy()
     {
         Vector2 poses = GetRandomPoint();
         GameObject CurrEnemy = Instantiate(EnemyPrefab);
+        CurrEnemy.transform.SetParent(EnemiesObj.transform);
         CurrEnemy.transform.position = new Vector3(Player.transform.position.x + poses.x, Player.transform.position.y + poses.y, 0);
         Enemy CurrEnemyScr = CurrEnemy.GetComponent<Enemy>();
         CurrEnemyScr.target = Player.transform;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Chest : MonoBehaviour
 {
-    [SerializeField] Casino CasinoScr;
+    [SerializeField] public Casino CasinoScr;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
