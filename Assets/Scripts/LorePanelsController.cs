@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class LorePanelsController : MonoBehaviour
 {
+
     [Serializable]
     public class LorePanelBlock
     {
@@ -34,6 +35,13 @@ public class LorePanelsController : MonoBehaviour
     private UnityAction[] openActions = Array.Empty<UnityAction>();
     private UnityAction[] closeActions = Array.Empty<UnityAction>();
 
+
+    [SerializeField] float TimeForPanel1 = 60f;
+    [SerializeField] float TimeForPanel2 = 120f;
+    [SerializeField] float TimeForPanel3 = 360f;
+    float RecordTime = 0;
+
+
     private void Awake()
     {
         CreateButtonActions();
@@ -42,6 +50,7 @@ public class LorePanelsController : MonoBehaviour
 
     private void Start()
     {
+        RecordTime = PlayerPrefs.GetFloat("Gametime", 0f);
         ApplyStartState();
     }
 
@@ -231,8 +240,18 @@ public class LorePanelsController : MonoBehaviour
          *
          * Сейчас возвращаем true, чтобы все панели открывались сразу.
          */
+        if (block.PanelIndex == 0)
+            return RecordTime >= TimeForPanel1;
 
-        return true;
+        if (block.PanelIndex == 1)
+            return RecordTime >= TimeForPanel2;
+
+        if (block.PanelIndex == 2)
+            return RecordTime >= TimeForPanel3;
+
+        return false;
+
+        //return true;
     }
 
     private void OnPanelLocked(LorePanelBlock block)

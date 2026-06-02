@@ -6,8 +6,11 @@ public class MainMenuButtons : MonoBehaviour
     [Header("Scene Settings")]
     [SerializeField] private string gameSceneName = "Game";
 
+    [SerializeField] GameObject LoadingPanel;
+
     public void StartGame()
     {
+        LoadingPanel.SetActive(true);
         SceneManager.LoadScene(gameSceneName);
     }
 

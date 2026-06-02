@@ -42,6 +42,8 @@ public class Player : MonoBehaviour
     [Header("Invulnerability")]
     [SerializeField] private bool ShowInvulnerabilityDebug = false;
 
+    [SerializeField] GameObject LoadingPanel;
+
     private float hor = 0f;
     private float ver = 0f;
 
@@ -403,6 +405,7 @@ public class Player : MonoBehaviour
         if (CurrHp <= 0f)
         {
             //dead
+            LoadingPanel.SetActive(true);
             float savedTime = PlayerPrefs.GetFloat("Gametime", 0f);
 
             // Проверяем, что новое время больше

@@ -49,6 +49,19 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void AddHp(int Add)
+    {
+        Heath = Heath + Add;
+    }
+    public void AddDmg(float Add)
+    {
+        Dmg = Dmg + Add;
+    }
+    public void AddSpeed(float Add)
+    {
+        Speed = Speed + Add;
+    }
+
     private void Reset()
     {
         rb = GetComponent<Rigidbody2D>();

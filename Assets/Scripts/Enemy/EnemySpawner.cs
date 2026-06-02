@@ -21,6 +21,10 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] GameObject EnemiesObj;
     [SerializeField] GameObject ChestsObj;
 
+    [SerializeField] int AddHp = 5;
+    [SerializeField] float AddDmg = 0.5f;
+    [SerializeField] float AddSpeed = 0.05f;
+
     private void Start()
     {
         StartCoroutine(EnemySpawn());
@@ -86,6 +90,10 @@ public class EnemySpawner : MonoBehaviour
         CurrEnemy.transform.position = new Vector3(Player.transform.position.x + poses.x, Player.transform.position.y + poses.y, 0);
         Enemy CurrEnemyScr = CurrEnemy.GetComponent<Enemy>();
         CurrEnemyScr.target = Player.transform;
+        int multip = (int)(elapsedTime / 10);
+        CurrEnemyScr.AddHp(AddHp * multip);
+        CurrEnemyScr.AddDmg(AddDmg * multip);
+        CurrEnemyScr.AddSpeed(AddSpeed * multip);
         CurrEnemy.transform.rotation = Quaternion.identity;
 
     }
