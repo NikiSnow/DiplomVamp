@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Rigidbody2D Rb;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] public Transform target;
+    [SerializeField] public Player ThePlayer;
     [SerializeField] private SurfaceInteractor SurfaceInteractor;
 
     [Header("Stats")]
@@ -241,7 +242,8 @@ public class Enemy : MonoBehaviour
     {
         if (InRot)
         {
-            TakeDmg(0.2f);
+            TakeDmg(0.2f+(ThePlayer.CurrentAddDmg/10));
+            
         }
     }
 

@@ -279,7 +279,7 @@ public class Casino : MonoBehaviour
             {
                 ThePlayer.GiveMaxHp(BlueAddMaxHp);
             }
-            else if (r < 1)
+            else if (r < 0.87)
             {
                 ThePlayer.GiveDmg(BlueAddDmg);
             }

@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -64,7 +65,7 @@ public class Player : MonoBehaviour
     public int CurrentHealthRegen => HealthRegen;
     public int CurrentAddMaxHp => AddMaxHp;
     public int CurrentAddDmg => AddDmg;
-    public float CurrentAddAttackScale => AddAttackScale;
+    //public float CurrentAddAttackScale => AddAttackScale;
     public int CurrentAddSpeed => AddSpeed;
 
     public bool IsInvulnerable => invulnerabilityTimer > 0f;
@@ -162,6 +163,18 @@ public class Player : MonoBehaviour
 
         CurrHp = Mathf.Clamp(CurrHp, 0f, CurrentMaxHp);
         UpdateHealthVisual();
+        StartCoroutine(HealthRegenCor());
+    }
+
+    IEnumerator HealthRegenCor()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            CurrHp = CurrHp + HealthRegen;
+            if (CurrHp > MaxHp) CurrHp = MaxHp;
+            HealthCheck();
+        }
     }
 
     private void Update()
@@ -340,9 +353,9 @@ public class Player : MonoBehaviour
 
     public void GiveMaxHp(int Add)
     {
-        AddMaxHp += Add;
+        AddMaxHp = AddMaxHp + Add;
 
-        CurrHp += Add;
+        CurrHp = CurrHp + Add;
         CurrHp = Mathf.Clamp(CurrHp, 0f, CurrentMaxHp);
 
         UpdateHealthVisual();
@@ -357,12 +370,12 @@ public class Player : MonoBehaviour
         ShowRewardResult("Damage +" + Add);
     }
 
-    public void GiveAttackScale(float Add)
-    {
-        AddAttackScale += Add;
-        Debug.Log("Passive Add AttackScale" + Add);
-        ShowRewardResult("Радиус скиллов увеличен на " + Add);
-    }
+    //public void GiveAttackScale(float Add)
+    //{
+    //    AddAttackScale += Add;
+    //    Debug.Log("Passive Add AttackScale" + Add);
+    //    ShowRewardResult("Радиус скиллов увеличен на " + Add);
+    //}
 
     public void GiveSpeed(int Add)
     {

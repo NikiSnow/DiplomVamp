@@ -74,7 +74,7 @@ public class ShivaScr : MonoBehaviour
         if (enemy != null)
         {
             // Fallback если bufferScr не назначен
-            enemy.TakeDmg(damage);
+            enemy.TakeDmg(damage+ MyParent.ThePlayer.CurrentAddDmg);
         }
     }
 

@@ -8,6 +8,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] GameObject EnemyPrefab;
     [SerializeField] float SpawnDelay = 1;
     [SerializeField] GameObject Player;
+    [SerializeField] Player ThePlayer;
 
     [Header("Timer")]
     [SerializeField] TMP_Text TimerText;
@@ -90,6 +91,7 @@ public class EnemySpawner : MonoBehaviour
         CurrEnemy.transform.position = new Vector3(Player.transform.position.x + poses.x, Player.transform.position.y + poses.y, 0);
         Enemy CurrEnemyScr = CurrEnemy.GetComponent<Enemy>();
         CurrEnemyScr.target = Player.transform;
+        CurrEnemyScr.ThePlayer = ThePlayer;
         int multip = (int)(elapsedTime / 10);
         CurrEnemyScr.AddHp(AddHp * multip);
         CurrEnemyScr.AddDmg(AddDmg * multip);
